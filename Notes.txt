@@ -1,0 +1,253 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            Package.json
+/*
+In package.json, the "main": "index.js" field specifies the entry point of the package—the default 
+file that will be loaded when someone imports or requires your package.
+How It Works
+When another module runs:
+require('your-package') (CommonJS)
+import 'your-package' (ESM)
+Node.js looks at the "main" field to determine which file to execute first.
+*/
+
+/*
+In a package.json file, the "type" field determines how JavaScript files in the package are 
+treated—whether they use CommonJS (require) or (European Computer Manufacturers Association)ECMAScript Modules (ESM) (import).
+You can override the global "type" setting by using explicit extensions:
+.mjs → Always treated as ESM
+.cjs → Always treated as CommonJS
+.js → Follows the "type" field in package.json
+*/
+
+/*
+devDependencies are packages that are only needed during development and not in production. These 
+typically include tools for testing, linting, transpiling, and bundling code.
+*/
+
+
+/*
+The "scripts" section in package.json defines custom terminal commands that you can run using npm run 
+<script-name>. These scripts can automate tasks like starting a server, running tests, or building a 
+project.
+EX: "scripts": {
+  "dev": "nodemon -r dotenv/config src/index.js"
+}
+
+When you run:
+npm run dev
+
+It executes the following command:
+nodemon -r dotenv/config src/index.js
+
+Breaking It Down
+nodemon
+
+A tool that automatically restarts your Node.js app when file changes are detected.
+Installed as a dev dependency (npm install nodemon --save-dev).
+-r dotenv/config
+
+The -r flag (or --require) tells Node.js to pre-load a module before running the app.
+dotenv/config loads environment variables from a .env file before executing src/index.js.
+src/index.js
+
+This is the entry point of your application (inside the src/ folder).
+Nodemon watches for changes and restarts the app when needed.
+
+Common Script Commands
+Script Name	Command	Purpose
+"start"	node index.js	(Starts the application.)
+"dev"	nodemon index.js	(Starts the app in development mode with auto-restart.)
+"test"	jest	(Runs unit tests.)
+"build"	webpack --mode production	(Builds the project for production.)
+"lint"	eslint .	(Runs ESLint to check for errors.)
+"serve"	http-server ./dist	(Serves static files.)
+*/
+
+
+/*
+The "dependencies" field in package.json lists the npm packages required for the application to run in production.
+*/
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+                                        Differences Between package.json and package-lock.json
+
+                Feature	package.json	                             package-lock.json
+Purpose	      Lists dependencies with version ranges	             Locks exact dependency versions
+Controls	  Direct dependencies	                                 Direct & nested dependencies
+Versioning	   Uses ^ and ~ for flexibility	                     Stores precise versions
+Required in Git?	✅ Yes	                                   ✅ Recommended
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Why is .gitignore Required?
+A .gitignore file is used in Git repositories to prevent unwanted files from being tracked. 
+It ensures that only necessary files are committed, avoiding security risks, large file uploads, 
+and unnecessary clutter.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+What is .prettierrc?
+.prettierrc is a configuration file for Prettier, a code formatting tool that enforces consistent code
+style in JavaScript, TypeScript, and other languages.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+What is a .env File?
+A .env file (short for "environment file") is used to store environment variables for a project. It 
+helps keep sensitive data like API keys, database credentials, and configuration settings separate 
+from the code.
+
+Why Use .env?
+✅ Security – Prevents sensitive data from being exposed in public repositories.
+✅ Configuration Management – Keeps environment-specific settings separate from code.
+✅ Portability – Makes it easy to share configurations without hardcoding values.
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.gitkeep:
+
+We make .gitkeep in empty folders. These files are empty and only made for the sole purpose so that the folders can be pushed 
+into the github. As empty folders cannot be so after making this .gitkeep folder into it one can commit and push this folder.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                Explanation of the src/ Folder Structure
+
+src/ folder follows a well-structured MVC (Model-View-Controller) architecture, which is commonly used
+in Node.js backend applications. Below is a breakdown of each folder and file:
+
+1. controllers/ (Handles Business Logic)
+Contains functions that handle requests and responses.
+Calls services or interacts with models.
+Example: controllers/userController.js
+js
+Copy
+Edit
+const User = require("../models/User");
+
+exports.getUsers = async (req, res) => {
+  const users = await User.find();
+  res.json(users);
+};
+2. db/ (Database Configuration)
+Handles database connection and initialization.
+Example: db/connection.js (for MongoDB using Mongoose)
+js
+Copy
+Edit
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+module.exports = mongoose;
+3. middleware/ (Custom Middleware Functions)
+Contains authentication, logging, error handling, etc.
+Example: middleware/auth.js
+js
+Copy
+Edit
+module.exports = (req, res, next) => {
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+  next();
+};
+4. models/ (Database Schema & Models)
+Defines the structure of data stored in the database.
+Example: models/User.js (for MongoDB)
+js
+Copy
+Edit
+const mongoose = require("mongoose");
+
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  password: String,
+});
+
+module.exports = mongoose.model("User", userSchema);
+5. routes/ (Defines API Endpoints)
+Handles all HTTP request routes (GET, POST, PUT, DELETE).
+Example: routes/userRoutes.js
+js
+Copy
+Edit
+const express = require("express");
+const router = express.Router();
+const { getUsers } = require("../controllers/userController");
+
+router.get("/users", getUsers);
+
+module.exports = router;
+6. utils/ (Utility & Helper Functions)
+Stores reusable utility functions like error handlers, hashing, etc.
+Example: utils/hashPassword.js
+js
+Copy
+Edit
+const bcrypt = require("bcrypt");
+
+module.exports = (password) => bcrypt.hashSync(password, 10);
+7. app.js (Express App Configuration)
+Initializes the Express app, middleware, and routes.
+Example:
+js
+Copy
+Edit
+const express = require("express");
+const app = express();
+const userRoutes = require("./routes/userRoutes");
+
+app.use(express.json());
+app.use("/api", userRoutes);
+
+module.exports = app;
+8. constants.js (Global Constants)
+Stores constant values (e.g., error messages, API response codes).
+Example:
+js
+Copy
+Edit
+module.exports = {
+  STATUS_OK: 200,
+  STATUS_NOT_FOUND: 404,
+};
+9. index.js (Entry Point of the App)
+Starts the server and connects to the database.
+Example:
+js
+Copy
+Edit
+const app = require("./app");
+const mongoose = require("./db/connection");
+
+app.listen(3000, () => console.log("Server running on port 3000"));
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+                                            dotenv
+
+dotenv is a package that loads environment variables from a .env file into process.env in Node.js 
+applications. This helps keep sensitive data (like API keys, database credentials) secure and 
+configurable without hardcoding them into the code.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+

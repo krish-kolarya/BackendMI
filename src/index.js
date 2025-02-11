@@ -1,7 +1,27 @@
 ﻿import dotenv from "dotenv";
+
 import {DBConnection} from "./db/index.js";
-dotenv.config({ path: "./env" });
+
+dotenv.config({path : ".env"});
+
+import express from "express"
+
+const app = express()
+
 DBConnection()
+.then(() => {
+    const port = process.env.PORT || 8000; 
+    app.on("error", (error) => {
+        console.log(`Express error: `, error);
+    })
+    app.listen(port, () => {
+        console.log(`The port is listening on port: ${port}`);
+    })
+})
+.catch((error) => {
+    console.log(`MongoDB connection error: `,error);
+    
+})
 /*
 import express from "express";
 
