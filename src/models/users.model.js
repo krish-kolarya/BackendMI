@@ -46,21 +46,22 @@ const userSchema = new Schema (
         refreshToken: {
             type: String
         }
-    },
+    }, 
     {
         timestamps: true
     }
 )
 
+// hook
 userSchema.pre("save",async function (next){
-    if(!this.isModified("password")) return next();
-
-    this.password = bcrypt.hash(this.password,10)
-    next()
+    if(!this.isModified("password")) return next(); // if password is not modified simply return
+    this.password = await bcrypt.hash(this.password,10) // else encrypt the password
+    next();
 })
 
+//custom method
 userSchema.methods.isPasswordCorrect = async function (password){
-    return await bcrypt.compare(password, this.password)
+    return await bcrypt.compare(password, this.password); // compares the password in db and given by user
 }
 
 userSchema.methods.generateAccessToken = function(){
@@ -73,9 +74,8 @@ userSchema.methods.generateAccessToken = function(){
     process.env.ACCESS_TOKEN_SECRET,
     {
         expiresIn: process.env.ACCESS_TOKEN_EXPIRY
-    }
-)
-}
+    });
+};
 userSchema.methods.generateRefreshToken = function(){
     jwt.sign({
         _id: this._id,
@@ -87,4 +87,4 @@ userSchema.methods.generateRefreshToken = function(){
 )
 }
 
-export const User = model.Schema("User", userSchema)
+export const User = moongose.model("User", userSchema)

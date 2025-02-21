@@ -39,8 +39,8 @@ npm run dev
 It executes the following command:
 nodemon -r dotenv/config src/index.js
 
-Breaking It Down
-nodemon
+Breaking It Down:
+                          nodemon
 
 A tool that automatically restarts your Node.js app when file changes are detected.
 Installed as a dev dependency (npm install nodemon --save-dev).
@@ -142,12 +142,11 @@ exports.getUsers = async (req, res) => {
   const users = await User.find();
   res.json(users);
 };
+
 2. db/ (Database Configuration)
 Handles database connection and initialization.
 Example: db/connection.js (for MongoDB using Mongoose)
-js
-Copy
-Edit
+
 const mongoose = require("mongoose");
 
 mongoose.connect(process.env.DB_URI, {
@@ -203,12 +202,11 @@ Edit
 const bcrypt = require("bcrypt");
 
 module.exports = (password) => bcrypt.hashSync(password, 10);
+
 7. app.js (Express App Configuration)
 Initializes the Express app, middleware, and routes.
 Example:
-js
-Copy
-Edit
+
 const express = require("express");
 const app = express();
 const userRoutes = require("./routes/userRoutes");
@@ -217,26 +215,30 @@ app.use(express.json());
 app.use("/api", userRoutes);
 
 module.exports = app;
+
 8. constants.js (Global Constants)
 Stores constant values (e.g., error messages, API response codes).
 Example:
-js
-Copy
-Edit
+
+
 module.exports = {
   STATUS_OK: 200,
   STATUS_NOT_FOUND: 404,
 };
+
 9. index.js (Entry Point of the App)
 Starts the server and connects to the database.
 Example:
-js
-Copy
-Edit
+
 const app = require("./app");
 const mongoose = require("./db/connection");
 
 app.listen(3000, () => console.log("Server running on port 3000"));
+
+///*
+.catch() → Catches errors from DBConnection() (Promise-based errors).
+app.on("error") → Listens to Express server errors during runtime
+*///
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -250,4 +252,131 @@ configurable without hardcoding them into the code.
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+                                              Express
+/**                                              
+Express.js (or simply Express) is a minimal and flexible Node.js web application framework that simplifies building web 
+applications and APIs. 
+It provides a set of features to develop both web and mobile applications.
+
+🛠 Why Use Express?
+Simplifies Server Creation:
+Node.js by itself is powerful but low-level. Express makes it easier to handle requests, routes, and responses
+ without writing boilerplate code.
+
+Minimal & Fast:
+It’s lightweight but highly extensible, allowing developers to build anything from simple sites to complex APIs.
+
+Middleware Support:
+Express uses middleware functions to process requests. Middleware can handle tasks like authentication, logging, 
+and parsing data.
+
+Routing Made Easy:
+Express provides a clean way to define different routes (URLs) for your web application.
+
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Define a route
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+**/
+
+
+/**
+Basic Express Example
+
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Define a route
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+
+💡 What’s Happening Here?
+require('express'): Loads the Express module.
+app.get('/', ...): Defines a GET route at '/' that sends "Hello, World!".
+app.listen(PORT, ...): Starts the server on port 3000.
+**/
+
+ Key Express Concepts:
+
+Routing:
+Handling URLs and HTTP methods (GET, POST, etc.)
+
+app.get('/about', (req, res) => res.send('About Page'));
+app.post('/submit', (req, res) => res.send('Form Submitted'));
+
+
+
+Middleware:
+Functions that run during request-response cycles.
+app.use(express.json()); // Parses JSON bodies
+
+
+
+Serving Static Files:
+To serve files like HTML, CSS, JS:
+app.use(express.static('public'));
+
+
+
+Error Handling:
+Express has built-in mechanisms for handling errors.
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+
+/////////////////////////////////////////////////////////
+                      bcrypt
+
+Purpose:
+bcrypt is a password hashing library. It is used to transform a plain text password into a secure, hashed representation before storing it in a database.
+
+Why Use bcrypt?
+
+Security: Storing plain text passwords is highly insecure. Hashing transforms passwords into an irreversible format.
+Salted Hashing: bcrypt automatically incorporates a salt (random data) into the hash, which defends against rainbow table attacks.
+Adaptive: It can be configured to increase computational complexity over time, which makes brute-force attacks less feasible as hardware improves.
+
+/////////////////////////////////////////////////////////
+
+                      JWT
+
+Purpose:
+JWT is used to securely transmit information between parties (like a server and a client) in a compact, self-contained token.
+
+Why Use JWT?
+
+Stateless Authentication: After a user logs in, a JWT is issued and can be used to authenticate subsequent requests without needing to store session data on the server.
+Integrity and Verification: A JWT is signed (using a secret or a public/private key pair), so the recipient can verify its authenticity and ensure it hasn't been tampered with.
+Flexibility: JWTs can include various pieces of user-related information (claims) which can be used to implement fine-grained access control.
+
+Combined Role in Authentication
+Password Handling:
+When a user registers or logs in, bcrypt hashes the provided password and later verifies it during authentication.
+
+Token Issuance:
+Once authenticated, JWT is used to generate an access token (and often a refresh token) that the client uses to prove its identity on future requests.
+
+/////////////////////////////////////////////////////////
 
