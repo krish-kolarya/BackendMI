@@ -133,9 +133,7 @@ in Node.js backend applications. Below is a breakdown of each folder and file:
 Contains functions that handle requests and responses.
 Calls services or interacts with models.
 Example: controllers/userController.js
-js
-Copy
-Edit
+
 const User = require("../models/User");
 
 exports.getUsers = async (req, res) => {
@@ -155,22 +153,20 @@ mongoose.connect(process.env.DB_URI, {
 });
 
 module.exports = mongoose;
+
 3. middleware/ (Custom Middleware Functions)
 Contains authentication, logging, error handling, etc.
 Example: middleware/auth.js
-js
-Copy
-Edit
+
 module.exports = (req, res, next) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
   next();
 };
+
 4. models/ (Database Schema & Models)
 Defines the structure of data stored in the database.
 Example: models/User.js (for MongoDB)
-js
-Copy
-Edit
+
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -180,12 +176,11 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("User", userSchema);
+
 5. routes/ (Defines API Endpoints)
 Handles all HTTP request routes (GET, POST, PUT, DELETE).
 Example: routes/userRoutes.js
-js
-Copy
-Edit
+
 const express = require("express");
 const router = express.Router();
 const { getUsers } = require("../controllers/userController");
@@ -193,12 +188,11 @@ const { getUsers } = require("../controllers/userController");
 router.get("/users", getUsers);
 
 module.exports = router;
+
 6. utils/ (Utility & Helper Functions)
 Stores reusable utility functions like error handlers, hashing, etc.
 Example: utils/hashPassword.js
-js
-Copy
-Edit
+
 const bcrypt = require("bcrypt");
 
 module.exports = (password) => bcrypt.hashSync(password, 10);
@@ -219,7 +213,6 @@ module.exports = app;
 8. constants.js (Global Constants)
 Stores constant values (e.g., error messages, API response codes).
 Example:
-
 
 module.exports = {
   STATUS_OK: 200,
@@ -350,13 +343,16 @@ app.use((err, req, res, next) => {
                       bcrypt
 
 Purpose:
-bcrypt is a password hashing library. It is used to transform a plain text password into a secure, hashed representation before storing it in a database.
+bcrypt is a password hashing library. It is used to transform a plain text password into a secure, hashed representation 
+before storing it in a database.
 
 Why Use bcrypt?
 
 Security: Storing plain text passwords is highly insecure. Hashing transforms passwords into an irreversible format.
-Salted Hashing: bcrypt automatically incorporates a salt (random data) into the hash, which defends against rainbow table attacks.
-Adaptive: It can be configured to increase computational complexity over time, which makes brute-force attacks less feasible as hardware improves.
+Salted Hashing: bcrypt automatically incorporates a salt (random data) into the hash, which defends against rainbow 
+table attacks.
+Adaptive: It can be configured to increase computational complexity over time, which makes brute-force attacks less 
+feasible as hardware improves.
 
 /////////////////////////////////////////////////////////
 
@@ -367,16 +363,50 @@ JWT is used to securely transmit information between parties (like a server and 
 
 Why Use JWT?
 
-Stateless Authentication: After a user logs in, a JWT is issued and can be used to authenticate subsequent requests without needing to store session data on the server.
-Integrity and Verification: A JWT is signed (using a secret or a public/private key pair), so the recipient can verify its authenticity and ensure it hasn't been tampered with.
-Flexibility: JWTs can include various pieces of user-related information (claims) which can be used to implement fine-grained access control.
+Stateless Authentication: After a user logs in, a JWT is issued and can be used to authenticate subsequent requests 
+without needing to store session data on the server.
+Integrity and Verification: A JWT is signed (using a secret or a public/private key pair), so the recipient can verify 
+its authenticity and ensure it hasn't been tampered with.
+Flexibility: JWTs can include various pieces of user-related information (claims) which can be used to implement 
+fine-grained access control.
 
 Combined Role in Authentication
 Password Handling:
 When a user registers or logs in, bcrypt hashes the provided password and later verifies it during authentication.
 
 Token Issuance:
-Once authenticated, JWT is used to generate an access token (and often a refresh token) that the client uses to prove its identity on future requests.
+Once authenticated, JWT is used to generate an access token (and often a refresh token) that the client uses to prove 
+its identity on future requests.
 
-/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                        
+                                                mongoose:
+
+
+What is Mongoose?
+Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js. It provides a straightforward, 
+schema-based solution to model application data, ensuring validation, type casting, query building, and business logic 
+implementation.
+
+Why Use Mongoose?
+Schema-based modeling: Define schemas to enforce structure in MongoDB documents.
+Validation: Automatically validate data before saving.
+Middleware (Hooks): Run logic before/after database operations.
+Query Helpers: Simplifies querying and data manipulation.
+Population: Efficiently reference documents across collections.
+
+It is used in Node.js applications to interact with MongoDB databases efficiently.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                      multer
+
+What is multer?
+multer is a Node.js middleware used for handling file uploads in Express.js applications. It allows users to upload files, 
+such as images, videos, or documents, and saves them to a specified location on the server.
+
+How multer Works
+Receives a file from the client (e.g., from a form).
+Stores it in memory or disk (depending on configuration). 
+Provides access to the file’s details (like name, size, type).
 

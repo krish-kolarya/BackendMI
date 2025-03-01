@@ -13,7 +13,7 @@
   "author": "krishna kolarya",
   "license": "ISC",
   "description": "My first professional backend project",
-  "dependencies": {
+  "dependencies": { 
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
