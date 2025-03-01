@@ -18,4 +18,7 @@ router.route("/register").post(
     ]),
     registerUser);
 
+// userRouter itself contains another middleware (upload.fields(...)), which processes file uploads before calling 
+// registerUser.
+
 export default router;

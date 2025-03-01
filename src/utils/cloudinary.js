@@ -1,3 +1,11 @@
+/*Standard Approach:
+
+User Uploads a File: The user submits a file through a form.
+
+Multer Handles the Upload: Multer processes the incoming file and stores it temporarily on the server's local storage.
+
+Upload to Cloudinary: The server retrieves the file from local storage and uploads it to Cloudinary.*/
+
 // We are assuming that a file has been provided to us,
 // and we are given the path to its local storage location
 
@@ -17,10 +25,10 @@ const uploadOnCloudinary = async (localFilePath) => {
         (localFilePath, {
             resource_type: "auto"
         })
-        console.log("file is uploaded on cloudinary",response.url);
+        console.log("file is uploaded on cloudinary ",response.url);
         return response;
     } catch(error){
-        fs.unlinkSync(localFilePath)
+        fs.unlinkSync(localFilePath) //If the file was not uploaded, we clean the server by deleting(unlinking) the files
         return null;  
     }
 }

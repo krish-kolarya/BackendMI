@@ -410,3 +410,141 @@ Receives a file from the client (e.g., from a form).
 Stores it in memory or disk (depending on configuration). 
 Provides access to the file’s details (like name, size, type).
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                              HTTP
+
+HTTP (HyperText Transfer Protocol) is like a language that computers use to talk to each other over the internet.
+
+Imagine you open a web browser and type a website name (like google.com). Your browser sends a request using HTTP to a web server, asking for the website. The server then sends back the website’s content (text, images, etc.), and your browser displays it for you.
+
+Simple Example:
+You: "Hey server, can you show me Google’s homepage?" (Your browser sends an HTTP request)
+Server: "Sure! Here it is." (The server sends an HTTP response with the webpage data)
+
+
+
+                                              HTTP HEADER
+
+An HTTP header is like a label on a package that helps the web server and browser understand how to send and receive data.
+
+Imagine you order a pizza online. When the pizza shop delivers it, they put a label on the box with details like:
+
+Your name (who ordered it)
+Delivery address (where to send it)
+Type of pizza (what's inside)
+Special instructions (extra cheese, no onions, etc.)
+Similarly, when your browser requests a webpage, it sends HTTP headers with extra information. The server also responds with headers.
+
+Example:
+Request Header (sent by browser)
+
+Host: google.com (Which website you want?)
+User-Agent: Chrome (Which browser you are using?)
+Accept-Language: en-US (Which language you prefer?)
+Response Header (sent by server)
+
+Content-Type: text/html (The page contains text and HTML code)
+Cache-Control: no-cache (Don't store this page in memory, always load fresh)
+Set-Cookie: userID=1234 (Save some info about you for next visit)
+HTTP headers help websites work faster, stay secure, and provide the right content to users. 🚀
+
+uses: caching, state management(whether the user is a guest or admin), authentication.
+
+TYPES OF HEADERS:
+
+Request Header         -> from client
+Response Header        -> from server
+Representation Header  -> encoding/compression
+Payload Header         -> data
+
+
+MOST COMMONLY USED HEADERS
+
+Accept: application/json (Which type of data to accept)
+User-Agent: Information about the user (like which device the user is using)
+Authorization: Bearer JWT_TOKEN
+Content-Type: The type of content being sent
+Cookie: Info about cookie
+Cache-Control: Info about the cache
+
+
+
+                                      CORS
+
+CORS (Cross-Origin Resource Sharing) is like a security guard that controls which websites are allowed to access a server's data.
+
+Imagine this:
+You own a restaurant (Server), and customers (Websites) can place online orders. However, you only want orders from trusted food apps like Zomato and Swiggy, not random unknown apps.
+
+Similarly, a web server decides which websites (origins) can request its data. CORS rules define these permissions.
+
+TYPES:
+Access-Control-Allow-Origin: (From where the requests can be accepted -> origin )
+Access-Control-Allow-Credentials: allows browsers to send cookies and authentication headers in cross-origin requests
+Access-Control-Allow-Method: Which methods are allowed (ex: GET is allowed and POST is not)
+
+
+
+                                  Security
+
+
+Cross-Origin-Embedder-Policy (COEP): Cross-Origin-Embedder-Policy: require-corp ensures only safe resources (same-origin or with CORP header) are loaded, enabling powerful features like SharedArrayBuffer.
+
+Cross-Origin-Opener-Policy (COOP): Cross-Origin-Opener-Policy: same-origin isolates the browsing context to prevent access to your page from other origins, enhancing security against cross-origin attacks.
+
+Content-Security-Policy (CSP): Content-Security-Policy: default-src 'self' restricts the sources of content (scripts, images, styles) to prevent malicious code execution.
+
+X-XSS-Protection: X-XSS-Protection: 1; mode=block activates a browser's built-in cross-site scripting (XSS) filter and blocks the page if an attack is detected.
+
+
+
+                                  HTTP METHODS:
+
+
+Basic set of operations that canbe used to interact with server
+
+GET:     Retrieve a resource
+HEAD:    No message body (response header only) -> ex: what is the user-agent?
+OPTIONS: What operations are available
+TRACE:   Loopback Test (get same data)
+DELETE:  Remove a resource
+PUT:     Replaces a resource
+POST:    interact with resource (mostly add)
+PATCH:   Change part of a resource
+
+
+                                HTTP STATUS code
+
+1xx -> Informational
+2xx -> Success
+3xx -> Redirection
+4xx -> Client error
+5xx -> Server error
+
+ex:
+200 -> ok
+400 -> Bad Request
+401 -> Unauthorized
+404 -> Not found
+504 -> Gateway time out
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                            Cookie-Parser
+
+Cookie-Parser is like a cookie reader for your Node.js app.
+When a user visits a website, their browser stores cookies (small pieces of data) sent by the server. Later, 
+when the user makes another request (like visiting the website some other time), the browser sends these cookies back to the server .
+cookie-parser helps your server read and use these cookies easily.
+
+Example:
+User logs in → Server sends a cookie (userID=1234). (The server generates a userID (from the database))
+Next time the user visits, their browser sends this cookie.
+cookie-parser (present in the server) reads it and makes req.cookies.userID available in your code.
+
+This helps maintain logged-in sessions without asking for login details repeatedly.
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+** When we export default, we can give any name while importing.
+
